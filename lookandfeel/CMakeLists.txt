@@ -13,6 +13,7 @@ ecm_target_qml_sources(components SOURCES
     components/UserDelegate.qml
     components/UserList.qml
     components/WallpaperFader.qml
+    components/GreeterFader.qml
 )
 target_sources(components PRIVATE components/componentsplugin.cpp)
 target_link_libraries(components PRIVATE Plasma::Plasma)
@@ -25,8 +26,6 @@ qt6_add_shaders(components LNFSHADERS
     PREFIX "/qt/qml/org/kde/breeze/components/shaders/"
     FILES
         components/UserDelegate.frag
-        components/WallpaperFader.frag
     OUTPUTS
         UserDelegate.frag.qsb
-        WallpaperFader.frag.qsb
 )
