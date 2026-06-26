@@ -8,7 +8,6 @@
 import QtQuick
 import QtQuick.Controls as QtControls
 import org.kde.kirigami as Kirigami
-import org.kde.newstuff as NewStuff
 import org.kde.kcmutils as KCM
 import org.kde.private.kcms.lookandfeel as Private
 
@@ -39,17 +38,6 @@ KCM.AbstractKCM {
             icon.name: "document-save"
             text: i18nc("@action:button", "Save Current Theme…")
             onTriggered: kcm.push("LookAndFeelSnapshot.qml")
-        },
-        NewStuff.Action {
-            configFile: "lookandfeel.knsrc"
-            text: i18nc("@action:intoolbar", "Get New…")
-            onEntryEvent: function (entry, event) {
-                if (event == NewStuff.Entry.StatusChangedEvent) {
-                    kcm.knsEntryChanged(entry);
-                } else if (event == NewStuff.Entry.AdoptedEvent) {
-                    kcm.reloadConfig();
-                }
-            }
         }
     ]
 

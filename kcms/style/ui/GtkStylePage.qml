@@ -10,7 +10,6 @@ import QtQuick.Layouts
 import QtQuick.Dialogs as QtDialogs
 import QtQuick.Controls as QtControls
 import org.kde.kirigami as Kirigami
-import org.kde.newstuff as NewStuff
 
 Kirigami.Page {
     id: gtkStylePage
@@ -87,15 +86,6 @@ Kirigami.Page {
                     text: i18n("Install from File…")
                     icon.name: "document-import"
                     onTriggered: fileDialogLoader.active = true
-                },
-                NewStuff.Action {
-                    text: i18n("Get New GNOME/GTK Application Styles…")
-                    configFile: "gtk_themes.knsrc"
-                    onEntryEvent: function (entry, event) {
-                        if (event == NewStuff.Entry.StatusChangedEvent) {
-                            kcm.load();
-                        }
-                    }
                 }
             ]
         }

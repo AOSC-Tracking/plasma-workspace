@@ -12,7 +12,6 @@ import QtQuick.Controls as QtControls
 import QtQuick.Dialogs as QtDialogs
 import org.kde.kirigami as Kirigami
 import org.kde.kwindowsystem // for isPlatformWayland
-import org.kde.newstuff as NewStuff
 import org.kde.kcmutils as KCM
 
 import org.kde.private.kcm_cursortheme
@@ -178,15 +177,6 @@ KCM.GridViewKCM {
             icon.name: "document-import"
             onTriggered: fileDialogLoader.active = true
             enabled: kcm.canInstall
-        },
-        NewStuff.Action {
-            text: i18n("&Get New…")
-            configFile: "xcursor.knsrc"
-            onEntryEvent: function (entry, event) {
-                if (event == NewStuff.Entry.StatusChangedEvent) {
-                    kcm.ghnsEntryChanged(entry);
-                }
-            }
         }
     ]
 

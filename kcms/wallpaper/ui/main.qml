@@ -12,7 +12,6 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQml
 
-import org.kde.newstuff as NewStuff
 import org.kde.kirigami as Kirigami
 
 import org.kde.kcmutils as KCM
@@ -104,12 +103,6 @@ Kirigami.ScrollablePage {
                     KCM.SettingHighlighter {
                         highlight: kcm.currentWallpaper !== "org.kde.image"
                     }
-                }
-                NewStuff.Button {
-                    configFile: "wallpaperplugin.knsrc"
-                    text: i18nc("@action:button", "Get New Plugins…")
-                    visibleWhenDisabled: true // don't hide on disabled
-                    Layout.preferredHeight: wallpaperComboBox.height
                 }
             }
         }
