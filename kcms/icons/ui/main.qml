@@ -12,7 +12,6 @@ import QtQuick.Dialogs as QtDialogs
 import QtQuick.Controls as QtControls
 import org.kde.kirigami as Kirigami
 import org.kde.kquickcontrolsaddons as KQCAddons
-import org.kde.newstuff as NewStuff
 import org.kde.kcmutils as KCM
 
 
@@ -67,17 +66,6 @@ KCM.GridViewKCM {
             text: i18n("Install from File…")
             icon.name: "document-import"
             onTriggered: fileDialogLoader.active = true
-        },
-        NewStuff.Action {
-            text: i18n("Get New…")
-            configFile: "icons.knsrc"
-            onEntryEvent: function (entry, event) {
-                if (event == NewStuff.Entry.StatusChangedEvent) {
-                    kcm.ghnsEntriesChanged();
-                } else if (event == NewStuff.Entry.AdoptedEvent) {
-                    kcm.reloadConfig();
-                }
-            }
         }
     ]
 

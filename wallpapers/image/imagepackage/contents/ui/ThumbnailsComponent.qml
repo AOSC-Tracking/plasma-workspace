@@ -11,7 +11,6 @@ import QtQuick.Layouts
 
 import org.kde.kcmutils as KCM
 import org.kde.kirigami as Kirigami
-import org.kde.newstuff as NewStuff
 import org.kde.kitemmodels as KItemModels
 
 Item {
@@ -93,13 +92,6 @@ Item {
                     Accessible.name: i18ndc("plasma_wallpaper_org.kde.image", "@action:button", "Add Wallpaper Image…")
                     visible: configDialog.currentWallpaper == "org.kde.image"
                     onTriggered: root.openChooserDialog();
-                },
-                NewStuff.Action {
-                    configFile: Kirigami.Settings.isMobile ? "wallpaper-mobile.knsrc" : "wallpaper.knsrc"
-                    text: i18ndc("plasma_wallpaper_org.kde.image", "@action:button the new things being gotten are wallpapers", "Get New…")
-                    Accessible.name: i18ndc("plasma_wallpaper_org.kde.image", "@action:button", "Get New Wallpaper Images…")
-                    displayHint: Kirigami.DisplayHint.KeepVisible
-                    viewMode: NewStuff.Page.ViewMode.Preview
                 },
                 Kirigami.Action {
                     icon.name: "edit-select-all-symbolic"

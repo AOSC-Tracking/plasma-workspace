@@ -15,7 +15,6 @@ import QtQuick.Controls as QtControls
 import QtQml
 
 import org.kde.kirigami as Kirigami
-import org.kde.newstuff as NewStuff
 import org.kde.kcmutils as KCM
 import org.kde.private.kcms.desktoptheme as Private
 
@@ -114,13 +113,6 @@ KCM.GridViewKCM {
             text: i18n("Install from File…")
             icon.name: "document-import"
             onTriggered: fileDialogLoader.active = true
-        },
-        NewStuff.Action {
-            text: i18n("Get New…")
-            configFile: "plasma-themes.knsrc"
-            onEntryEvent: function (entry, event) {
-                kcm.load();
-            }
         }
     ]
 

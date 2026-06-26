@@ -258,8 +258,6 @@ CKCmFontInst::CKCmFontInst(QObject *parent, const KPluginMetaData &data)
         new CPushButton(KGuiItem(i18n("Find Duplicates…"), u"edit-duplicate"_s, i18n("Scan for Duplicate Fonts…")), fontControlWidget);
 
     m_addFontControl = new CPushButton(KGuiItem(i18n("Install from File…"), u"document-import"_s, i18n("Install fonts from a local file")), fontControlWidget);
-    m_getNewFontsControl = new KNSWidgets::Button(i18n("Get New Fonts…"), QStringLiteral("kfontinst.knsrc"), widget());
-    m_getNewFontsControl->setToolTip(i18n("Download new fonts"));
 
     m_deleteFontControl = new CPushButton(KGuiItem(QString(), u"edit-delete"_s, i18n("Delete Selected Fonts…")), fontControlWidget);
 
@@ -287,7 +285,6 @@ CKCmFontInst::CKCmFontInst(QObject *parent, const KPluginMetaData &data)
     fontControlLayout->addWidget(m_statusLabel);
     fontControlLayout->addWidget(m_scanDuplicateFontsControl);
     fontControlLayout->addWidget(m_addFontControl);
-    fontControlLayout->addWidget(m_getNewFontsControl);
 
     fontsLayout->addWidget(m_previewSplitter);
     separator = new QFrame(widget());
@@ -363,7 +360,6 @@ CKCmFontInst::CKCmFontInst(QObject *parent, const KPluginMetaData &data)
     connect(m_enableGroupControl, &QAbstractButton::clicked, this, &CKCmFontInst::enableGroup);
     connect(m_disableGroupControl, &QAbstractButton::clicked, this, &CKCmFontInst::disableGroup);
     connect(m_addFontControl, &QAbstractButton::clicked, this, qOverload<>(&CKCmFontInst::addFonts));
-    connect(m_getNewFontsControl, &KNSWidgets::Button::dialogFinished, this, &CKCmFontInst::downloadFonts);
     connect(m_deleteFontControl, &QAbstractButton::clicked, this, &CKCmFontInst::deleteFonts);
     connect(m_scanDuplicateFontsControl, &QAbstractButton::clicked, this, &CKCmFontInst::duplicateFonts);
     // connect(validateFontsAct, SIGNAL(triggered(bool)), SLOT(validateFonts()));
@@ -496,8 +492,6 @@ void CKCmFontInst::groupSelected(const QModelIndex &index)
         }
         grp->setValidated();
     }
-
-    m_getNewFontsControl->setEnabled(grp->isPersonal() || grp->isAll());
 }
 
 void CKCmFontInst::print(bool all)
@@ -782,26 +776,6 @@ void CKCmFontInst::duplicateFonts()
 // void CKCmFontInst::validateFonts()
 //{
 //}
-
-void CKCmFontInst::downloadFonts(const QList<KNSCore::Entry> &changedEntries)
-{
-    if (changedEntries.isEmpty()) {
-        return;
-    }
-
-    // Ask dbus helper for the current fonts folder name...
-    // We then sym-link our knewstuff3 download folder into the fonts folder...
-    QString destFolder = CJobRunner::folderName(false);
-    if (!destFolder.isEmpty()) {
-        destFolder += "kfontinst"_L1;
-        if (!QFile::exists(destFolder)) {
-            QFile _file(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kfontinst"_L1);
-            _file.link(destFolder);
-        }
-    }
-
-    doCmd(CJobRunner::CMD_UPDATE, CJobRunner::ItemList());
-}
 
 void CKCmFontInst::print()
 {

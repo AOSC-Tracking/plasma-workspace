@@ -14,7 +14,6 @@ import QtQuick.Templates as T
 import QtQml
 
 import org.kde.kirigami as Kirigami
-import org.kde.newstuff as NewStuff
 import org.kde.kcmutils as KCM
 import org.kde.private.kcms.colors as Private
 
@@ -140,17 +139,6 @@ KCM.GridViewKCM {
             text: i18n("Install from File…")
             icon.name: "document-import"
             onTriggered: fileDialogLoader.active = true
-        },
-        NewStuff.Action {
-            text: i18n("Get New…")
-            configFile: "colorschemes.knsrc"
-            onEntryEvent: function (entry, event) {
-                if (event == NewStuff.Entry.StatusChangedEvent) {
-                    kcm.knsEntryChanged(entry)
-                } else if (event == NewStuff.Entry.AdoptedEvent) {
-                    kcm.loadSelectedColorScheme()
-                }
-            }
         }
     ]
 
