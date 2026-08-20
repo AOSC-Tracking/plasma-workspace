@@ -3,6 +3,11 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"plasma_runner_services\")
 
 kcoreaddons_add_plugin(krunner_services SOURCES servicerunner.cpp servicerunner.h INSTALL_NAMESPACE "kf6/krunner")
+if(HAVE_LIBPINYIN)
+    target_sources(krunner_services PRIVATE pinyinmatch.cpp pinyinmatch.h)
+    target_compile_definitions(krunner_services PRIVATE HAVE_LIBPINYIN LIBPINYIN_DATA_DIR="${LIBPINYIN_DATA_DIR}")
+    target_link_libraries(krunner_services PkgConfig::LibPinyin)
+endif()
 ecm_qt_declare_logging_category(krunner_services
     HEADER debug.h
     IDENTIFIER RUNNER_SERVICES
