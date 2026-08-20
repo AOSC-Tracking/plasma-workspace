@@ -36,11 +36,18 @@
 #include "bitap.h"
 #include "debug.h"
 #include "levenshtein.h"
+#ifdef HAVE_LIBPINYIN
+#include "pinyinmatch.h"
+#endif
 
 using namespace Qt::StringLiterals;
 
 namespace
 {
+
+#ifdef HAVE_LIBPINYIN
+static PinyinMatch pinyinMatch;
+#endif
 
 struct Score {
     qreal value = 0.0; // The final score, it is the sum of all scores.
@@ -320,12 +327,34 @@ private:
             return Score{.value = std::numeric_limits<decltype(Score::value)>::max(), .categoryRelevance = KRunner::QueryMatch::CategoryRelevance::Highest};
         }
 
-        const auto weightedCards = {
+        std::vector weightedCards = {
             WeightedScoreCard{.cards = makeScores(name, queryList), .weight = 100.0},
             WeightedScoreCard{.cards = makeScores(service->untranslatedName(), queryList), .weight = 75.0},
             WeightedScoreCard{.cards = makeScores(service->genericName(), queryList), .weight = 50.0},
             WeightedScoreCard{.cards = makeScoreFromList(queryList, service->keywords()), .weight = 25.0},
         };
+#ifdef HAVE_LIBPINYIN
+        for (qsizetype offset = 0; offset < name.size(); ++offset) {
+            if (pinyinMatch.MatchStr(QStringView(name).sliced(offset), query)) {
+                // Feed pinyin-only matches into the standard weighted scoring path.
+                weightedCards.push_back(WeightedScoreCard{
+                    .cards = {ScoreCard{
+                        .search = query,
+                        .term = name,
+                        .bitap = {.size = query.size(), .distance = 0},
+                        .bitapScore = 1.0,
+                        .levenshtein = 0,
+                        .levenshteinScore = 0.0,
+                        .perfectMatch = false,
+                        .completeMatch = false,
+                        .startsWith = false,
+                    }},
+                    .weight = 5000.0,
+                });
+                break;
+            }
+        }
+#endif
 
         if (RUNNER_SERVICES().isDebugEnabled()) {
             qCDebug(RUNNER_SERVICES) << "+++++++ Weighted Cards for" << name;
