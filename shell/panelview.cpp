@@ -119,6 +119,22 @@ PanelView::PanelView(ShellCorona *corona, QScreen *targetScreen, QWindow *parent
     m_strutsTimer.setSingleShot(true);
     connect(&m_strutsTimer, &QTimer::timeout, this, &PanelView::updateExclusiveZone);
 
+    // On X11 the strut a panel sets is relative to the combined geometry of all screens, so
+    // it has to be recomputed whenever the screen layout changes, even if this panel stays on
+    // the same screen. Otherwise a panel can keep a stale strut computed for the previous
+    // (e.g. larger) layout, which shrinks the work area of the remaining screens so that
+    // maximized windows no longer fill them.
+    const auto watchScreenLayout = [this](QScreen *screen) {
+        scheduleStrutsUpdate();
+        connect(screen, &QScreen::geometryChanged, this, &PanelView::scheduleStrutsUpdate, Qt::UniqueConnection);
+        connect(screen, &QScreen::virtualGeometryChanged, this, &PanelView::scheduleStrutsUpdate, Qt::UniqueConnection);
+    };
+    for (QScreen *screen : qGuiApp->screens()) {
+        watchScreenLayout(screen);
+    }
+    connect(qGuiApp, &QGuiApplication::screenAdded, this, watchScreenLayout);
+    connect(qGuiApp, &QGuiApplication::screenRemoved, this, &PanelView::scheduleStrutsUpdate);
+
     connect(m_corona, &Plasma::Corona::editModeChanged, this, &PanelView::updateEditModeLabel);
 
     // Register enums
@@ -1156,6 +1172,11 @@ void PanelView::showEvent(QShowEvent *event)
     integrateScreen();
     updateEditModeLabel();
 }
+
+void PanelView::scheduleStrutsUpdate()
+{
+    m_strutsTimer.start(STRUTSTIMERDELAY);
+};
 
 void PanelView::setScreenToFollow(QScreen *screen)
 {
