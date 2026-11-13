@@ -345,6 +345,7 @@ private:
     bool edgeActivated() const;
     bool canSetStrut() const;
     void positionConfigView();
+    void scheduleStrutsUpdate();
 
     int m_offset;
     int m_maxLength;

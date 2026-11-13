@@ -122,6 +122,17 @@ PanelView::PanelView(ShellCorona *corona, QScreen *targetScreen, QWindow *parent
     m_strutsTimer.setSingleShot(true);
     connect(&m_strutsTimer, &QTimer::timeout, this, &PanelView::updateExclusiveZone);
 
+    const auto watchScreenLayout = [this](QScreen *screen) {
+        scheduleStrutsUpdate();
+        connect(screen, &QScreen::geometryChanged, this, &PanelView::scheduleStrutsUpdate, Qt::UniqueConnection);
+        connect(screen, &QScreen::virtualGeometryChanged, this, &PanelView::scheduleStrutsUpdate, Qt::UniqueConnection);
+    };
+    for (QScreen *screen : qGuiApp->screens()) {
+        watchScreenLayout(screen);
+    }
+    connect(qGuiApp, &QGuiApplication::screenAdded, this, watchScreenLayout);
+    connect(qGuiApp, &QGuiApplication::screenRemoved, this, &PanelView::scheduleStrutsUpdate);
+
     connect(m_corona, &Plasma::Corona::editModeChanged, this, &PanelView::updateEditModeLabel);
 
     qmlRegisterAnonymousType<QScreen>("", 1);
@@ -1147,6 +1158,11 @@ void PanelView::showEvent(QShowEvent *event)
 
     integrateScreen();
     updateEditModeLabel();
+}
+
+void PanelView::scheduleStrutsUpdate()
+{
+    m_strutsTimer.start(STRUTSTIMERDELAY);
 }
 
 void PanelView::moveToScreen(QScreen *screen)
