@@ -1,6 +1,7 @@
 set(krunner_SRCS
     main.cpp
     view.cpp
+    x11windowscreenrelativepositioner.cpp x11windowscreenrelativepositioner.h
 )
 
 set(krunner_dbusAppXML dbus/org.kde.krunner.App.xml)
