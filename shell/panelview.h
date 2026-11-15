@@ -10,6 +10,9 @@
 #include <QPointer>
 #include <QPropertyAnimation>
 #include <QTimer>
+#ifdef HAVE_X11
+#include <QWindow> // For WId
+#endif
 
 #include <KSvg/FrameSvg>
 #include <kwindoweffects.h>
@@ -135,6 +138,16 @@ class PanelView : public PlasmaQuick::ContainmentView
     Q_PROPERTY(bool userConfiguring READ isUserConfiguring NOTIFY userConfiguringChanged)
 
     /**
+     * Quirk for X11 session on NVIDIA GPU.
+     */
+    Q_PROPERTY(bool unsupportedConfiguration READ isUnsupportedConfiguration NOTIFY unsupportedConfigurationChanged)
+
+    /**
+     * Quirk for X11 session on NVIDIA GPU.
+     */
+    Q_PROPERTY(QString unsupportedConfigurationDescription READ unsupportedConfigurationDescription NOTIFY unsupportedConfigurationChanged)
+
+    /**
      * When this property is set to true, the panel will always prefer the
      * floating style for applets.
      * @since 6.4
@@ -204,6 +217,10 @@ public:
 
     QRect relativeConfigRect() const;
 
+    bool isUnsupportedConfiguration() const;
+
+    QString unsupportedConfigurationDescription() const;
+
     Plasma::Types::BackgroundHints backgroundHints() const;
     void setBackgroundHints(Plasma::Types::BackgroundHints hint);
 
@@ -228,6 +245,8 @@ public:
      * @returns the dodge/defloat geometry of the panel given a distance
      */
     Q_INVOKABLE QRect dogdeGeometryByDistance(int distance) const;
+
+    Q_INVOKABLE void fixUnsupportedConfiguration();
 
     Q_INVOKABLE void clonePanelTo(Plasma::Types::Location location, QScreen *screen);
 
@@ -274,6 +293,7 @@ Q_SIGNALS:
     void floatingChanged();
     void floatingAppletsChanged();
     void minThicknessChanged();
+    void unsupportedConfigurationChanged();
 
     void geometryChanged();
     void relativeConfigRectChanged();
@@ -310,6 +330,7 @@ private Q_SLOTS:
     void updateTouchingWindow();
 
 private:
+    bool isUnsupportedEnvironment() const;
     bool defaultFloating() const;
     OpacityMode defaultOpacityMode() const;
     int readConfigValueWithFallBack(const QString &key, int defaultValue);
@@ -322,6 +343,7 @@ private:
     bool containmentContainsPosition(const QPointF &point) const;
     QPointF positionAdjustedForContainment(const QPointF &point) const;
     bool edgeActivated() const;
+    bool canSetStrut() const;
     void positionConfigView();
 
     int m_offset;

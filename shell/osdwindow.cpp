@@ -5,8 +5,14 @@
 */
 
 #include "osdwindow.h"
+#include "config-X11.h"
 
 #include <PlasmaQuick/PlasmaShellWaylandIntegration>
+
+#if HAVE_X11
+#include <KWindowSystem>
+#include <KX11Extras>
+#endif
 
 OsdWindow::OsdWindow()
 {
@@ -15,4 +21,11 @@ OsdWindow::OsdWindow()
 
     setFlag(Qt::WindowDoesNotAcceptFocus, true);
     setFlag(Qt::WindowTransparentForInput, true);
+
+#if HAVE_X11
+    if (KWindowSystem::isPlatformX11()) {
+        KX11Extras::setOnAllDesktops(winId(), true);
+        KX11Extras::setType(winId(), NET::OnScreenDisplay);
+    }
+#endif
 }

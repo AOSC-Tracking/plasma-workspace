@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "config-X11.h"
 #include "plasma/corona.h"
 
 #include <QDBusArgument>
@@ -317,6 +318,9 @@ private:
     std::unique_ptr<QMenu> m_addPanelsMenu;
     KPackage::Package m_lookAndFeelPackage;
 
+#if HAVE_X11
+    WId m_previousWId = 0;
+#endif
     bool m_blockRestorePreviousWindow = false;
     bool m_editModeShowedDesktop = false;
 

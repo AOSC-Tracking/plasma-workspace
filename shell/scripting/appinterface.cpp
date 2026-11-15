@@ -5,6 +5,7 @@
 */
 
 #include "appinterface.h"
+#include <config-X11.h>
 
 #include <QEventLoop>
 #include <QTimer>
