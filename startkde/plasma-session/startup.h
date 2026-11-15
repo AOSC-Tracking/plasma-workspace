@@ -51,6 +51,14 @@ public:
     void start() override;
 };
 
+class KCMInitJob : public KJob
+{
+    Q_OBJECT
+public:
+    KCMInitJob();
+    void start() override;
+};
+
 class AutoStartAppsJob : public KJob
 {
     Q_OBJECT

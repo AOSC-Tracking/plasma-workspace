@@ -29,7 +29,7 @@
  * There are 6 stages in ksplash
  *  - initial (from this class)
  *  - startPlasma (from startplasma)
- *  - kcminit (dropped)
+ *  - kcminit
  *  - ksmserver
  *  - wm (for X11 from KWin, for Wayland from this class)
  *  - desktop (from shellcorona)
@@ -70,8 +70,11 @@ SplashApp::SplashApp(int &argc, char **argv)
     }
 
     setStage(QStringLiteral("initial"));
-    setStage(QStringLiteral("kcminit"));
-    setStage(QStringLiteral("wm"));
+    if (KWindowSystem::isPlatformWayland()) {
+        setStage(QStringLiteral("wm"));
+    } else {
+        setStage(QStringLiteral("kcminit"));
+    }
 
     if (m_testing) {
         m_timer.start(TEST_STEP_INTERVAL, this);

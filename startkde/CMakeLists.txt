@@ -1,4 +1,5 @@
 add_subdirectory(plasmaautostart)
+add_subdirectory(kcminit)
 add_subdirectory(waitforname)
 add_subdirectory(startup-sound)
 
