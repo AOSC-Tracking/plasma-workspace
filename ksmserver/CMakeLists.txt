@@ -10,6 +10,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(ksmserver_SRCS
     main.cpp
     server.cpp
+    legacy.cpp
     logout.cpp
     client.cpp client.h
 )
@@ -31,6 +32,7 @@ configure_package_config_file(KSMServerDBusInterfaceConfig.cmake.in
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
 target_link_libraries(ksmserver
+    PW::KScreenLocker
     PW::KWorkspace
     KF6::XmlGui
     KF6::I18n

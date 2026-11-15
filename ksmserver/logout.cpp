@@ -107,6 +107,9 @@ void KSMServer::performLogout()
     }
 
     saveType = saveSession ? SmSaveBoth : SmSaveGlobal;
+#ifndef NO_LEGACY_SESSION_MANAGEMENT
+    performLegacySessionSave();
+#endif
     startProtection();
 
     // Tell KWin to start saving before we start tearing down clients
@@ -153,6 +156,9 @@ void KSMServer::saveCurrentSession()
 
     saveType = SmSaveLocal;
     saveSession = true;
+#ifndef NO_LEGACY_SESSION_MANAGEMENT
+    performLegacySessionSave();
+#endif
 
     auto aboutToSaveCall = m_kwinInterface->aboutToSaveSession(currentSession());
     aboutToSaveCall.waitForFinished();

@@ -7,7 +7,8 @@
 #pragma once
 
 #include "config-startplasma.h"
-
+#include "kcheckrunning/kcheckrunning.h"
+#include <ksplashinterface.h>
 #include <optional>
 
 extern QTextStream out;
@@ -30,7 +31,7 @@ bool syncDBusEnvironment();
 void setupFontDpi();
 QProcess *setupKSplash();
 
-bool startPlasmaSession();
+bool startPlasmaSession(bool wayland);
 
 void stopSystemdSession();
 void waitForKonqi();

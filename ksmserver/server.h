@@ -62,6 +62,8 @@ public:
     enum class InitFlag {
         None = 0,
         OnlyLocal = 1 << 0,
+        ImmediateLockScreen = 1 << 1,
+        NoLockScreen = 1 << 2,
     };
 
     Q_DECLARE_FLAGS(InitFlags, InitFlag)
@@ -133,6 +135,10 @@ private:
     bool defaultSession() const; // empty session
     void setupXIOErrorHandler();
 
+    void performLegacySessionSave();
+    void storeLegacySession(KConfig *config);
+    void restoreLegacySession(KConfig *config);
+    void restoreLegacySessionInternal(KConfigGroup *config, char sep = ',');
     QStringList windowWmCommand(WId w);
     QString windowWmClientMachine(WId w);
     WId windowWmClientLeader(WId w);
