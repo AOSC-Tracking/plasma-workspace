@@ -131,9 +131,11 @@ KCM.GridViewKCM {
                         Kirigami.Icon {
                             source: sizeComboDelegate.model.decoration
                             smooth: true
+                            // On wayland the cursor size is logical pixels, and on X11 it's physical pixels.
+                            property real devicePixelRatio: KWindowSystem.isPlatformWayland ? 1 : Screen.devicePixelRatio
                             property size iconSize: kcm.iconSizeFromIndex(sizeComboDelegate.index)
-                            Layout.preferredWidth: iconSize.width
-                            Layout.preferredHeight: iconSize.height
+                            Layout.preferredWidth: iconSize.width / devicePixelRatio
+                            Layout.preferredHeight: iconSize.height / devicePixelRatio
                             visible: valid && sizeComboDelegate.size > 0
                             roundToIconSize: false
                         }
